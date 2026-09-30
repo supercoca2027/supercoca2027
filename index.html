@@ -290,7 +290,7 @@ input:focus{outline:2px solid #C8102E;outline-offset:1px}
     <div style="display:flex;flex-direction:column;gap:20px">
       <div style="display:flex;flex-direction:column;gap:8px">
         <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(30px,4.4vw,44px);line-height:1;text-transform:uppercase;color:#C8102E">Fase de Grupos</h2>
-        <span style="font-size:14px;color:#6B6862">Desempate: confronto direto, saldo, gols marcados</span>
+        <span style="font-size:14px;color:#6B6862">Desempate: confronto direto (só entre 2 times), saldo, gols marcados</span>
       </div>
       <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;overflow:hidden">
         <div style="display:grid;grid-template-columns:{{ tCols }};gap:4px;padding:10px 10px;background:#C8102E;color:#fff;font-family:'Barlow Condensed';font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-align:center">
@@ -595,13 +595,20 @@ class Component extends DCLogic {
   standings(){
     const rows={};Object.keys(TEAMS).forEach(k=>rows[k]={k,j:0,v:0,e:0,d:0,gp:0,gc:0});
     const played=[];
-    GROUP.forEach(m=>{const r=this.res(m.id);if(!r.done)return;played.push({...m,...r});
+    GROUP.forEach(m=>{const r=this.res(m.id);if(!r.done)return;played.push({th:m.h,ta:m.a,gh:r.h,ga:r.a});
       const H=rows[m.h],A=rows[m.a];H.j++;A.j++;H.gp+=r.h;H.gc+=r.a;A.gp+=r.a;A.gc+=r.h;
       if(r.h>r.a){H.v++;A.d++}else if(r.h<r.a){A.v++;H.d++}else{H.e++;A.e++}});
-    const h2h=(x,y)=>{const m=played.find(p=>(p.h===x&&p.a===y)||(p.h===y&&p.a===x));if(!m)return 0;
-      const xs=m.h===x?m.h:m.a, ys=m.h===x?m.a:m.h;return Math.sign(ys-xs);};
-    const list=Object.values(rows).map(r=>({...r,pts:r.v*3+r.e,sg:r.gp-r.gc}));
-    list.sort((a,b)=>b.pts-a.pts||h2h(a.k,b.k)||b.sg-a.sg||b.gp-a.gp||TEAMS[a.k].name.localeCompare(TEAMS[b.k].name));
+    const list0=Object.values(rows).map(r=>({...r,pts:r.v*3+r.e,sg:r.gp-r.gc}));
+    const mini=grp=>{const set=new Set(grp.map(r=>r.k)),t={};grp.forEach(r=>t[r.k]={p:0,sg:0,gp:0});
+      played.forEach(p=>{if(!set.has(p.th)||!set.has(p.ta))return;
+        t[p.th].gp+=p.gh;t[p.ta].gp+=p.ga;t[p.th].sg+=p.gh-p.ga;t[p.ta].sg+=p.ga-p.gh;
+        if(p.gh>p.ga)t[p.th].p+=3;else if(p.gh<p.ga)t[p.ta].p+=3;else{t[p.th].p++;t[p.ta].p++;}});
+      return t;};
+    const byPts={};list0.forEach(r=>(byPts[r.pts]=byPts[r.pts]||[]).push(r));
+    const list=[];Object.keys(byPts).map(Number).sort((x,y)=>y-x).forEach(p=>{const g=byPts[p];
+      if(g.length===2){const t=mini(g);g.sort((x,y)=>t[y.k].p-t[x.k].p||y.sg-x.sg||y.gp-x.gp||TEAMS[x.k].name.localeCompare(TEAMS[y.k].name));}
+      else if(g.length>2){g.sort((x,y)=>y.sg-x.sg||y.gp-x.gp||TEAMS[x.k].name.localeCompare(TEAMS[y.k].name));}
+      list.push(...g);});
     return {list,played:played.length};
   }
   side(code,sub){
