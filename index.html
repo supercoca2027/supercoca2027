@@ -290,7 +290,7 @@ input:focus{outline:2px solid #C8102E;outline-offset:1px}
     <div style="display:flex;flex-direction:column;gap:20px">
       <div style="display:flex;flex-direction:column;gap:8px">
         <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(30px,4.4vw,44px);line-height:1;text-transform:uppercase;color:#C8102E">Fase de Grupos</h2>
-        <span style="font-size:14px;color:#6B6862">Desempate: confronto direto (só entre 2 times), saldo, gols marcados</span>
+        <span style="font-size:14px;color:#6B6862">Desempate: confronto direto, saldo, gols marcados</span>
       </div>
       <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;overflow:hidden">
         <div style="display:grid;grid-template-columns:{{ tCols }};gap:4px;padding:10px 10px;background:#C8102E;color:#fff;font-family:'Barlow Condensed';font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-align:center">
@@ -606,10 +606,15 @@ class Component extends DCLogic {
       return t;};
     const byPts={};list0.forEach(r=>(byPts[r.pts]=byPts[r.pts]||[]).push(r));
     const list=[];Object.keys(byPts).map(Number).sort((x,y)=>y-x).forEach(p=>{const g=byPts[p];
-      if(g.length===2){const t=mini(g);g.sort((x,y)=>t[y.k].p-t[x.k].p||y.sg-x.sg||y.gp-x.gp||TEAMS[x.k].name.localeCompare(TEAMS[y.k].name));}
-      else if(g.length>2){g.sort((x,y)=>y.sg-x.sg||y.gp-x.gp||TEAMS[x.k].name.localeCompare(TEAMS[y.k].name));}
-      list.push(...g);});
+      list.push(...this._rank(g,mini));});
     return {list,played:played.length};
+  }
+  _rank(g,mini){
+    if(g.length<2)return g;
+    const t=mini(g),by={};g.forEach(r=>(by[t[r.k].p]=by[t[r.k].p]||[]).push(r));
+    const keys=Object.keys(by).map(Number).sort((x,y)=>y-x);
+    if(keys.length===1)return [...g].sort((x,y)=>y.sg-x.sg||y.gp-x.gp||TEAMS[x.k].name.localeCompare(TEAMS[y.k].name));
+    return keys.flatMap(k=>this._rank(by[k],mini));
   }
   side(code,sub){
     if(code&&TEAMS[code])return {name:TEAMS[code].name,color:TEAMS[code].color,sub,op:1};
