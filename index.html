@@ -327,6 +327,7 @@ input:focus{outline:2px solid #C8102E;outline-offset:1px}
               <span style="text-align:center;font-family:'Barlow Condensed';font-weight:800;font-size:24px">{{ p.g }}</span>
             </div>
           </sc-for>
+          <sc-if value="{{ moreS }}" hint-placeholder-val="{{ false }}"><button onClick="{{ toggleS }}" style="width:100%;min-height:48px;border:0;border-top:1px solid #EFEDE8;background:#F5F4F1;color:#C8102E;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:15px">{{ sBtn }}</button></sc-if>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:20px">
@@ -341,6 +342,7 @@ input:focus{outline:2px solid #C8102E;outline-offset:1px}
               <span style="text-align:center;font-family:'Barlow Condensed';font-weight:800;font-size:24px">{{ p.gs }}</span>
             </div>
           </sc-for>
+          <sc-if value="{{ moreK }}" hint-placeholder-val="{{ false }}"><button onClick="{{ toggleK }}" style="width:100%;min-height:48px;border:0;border-top:1px solid #EFEDE8;background:#F5F4F1;color:#C8102E;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:15px">{{ kBtn }}</button></sc-if>
         </div>
       </div>
     </div>
@@ -510,6 +512,9 @@ input:focus{outline:2px solid #C8102E;outline-offset:1px}
             <button onClick="{{ onNext }}" style="min-height:54px;border:0;border-radius:2px;background:#fff;color:#111;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:16px">Próximo jogo ›</button>
           </div>
         </sc-if>
+        <sc-if value="{{ canReset }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ onReset }}" style="min-height:48px;border:1px dashed #F87171;border-radius:2px;background:none;color:#F87171;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:15px">Zerar jogo (volta a "não iniciado")</button>
+        </sc-if>
         <sc-if value="{{ hasGoals }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;flex-direction:column;gap:6px">
             <span style="font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:14px;color:#999">Gols do jogo · toque no × para desfazer</span>
@@ -624,6 +629,9 @@ class Component extends DCLogic {
     if(r.h!==r.a)return r.h>r.a?h:a;if(r.ph==null||r.pa==null||r.ph===r.pa)return null;return r.ph>r.pa?h:a;}
   goal(id,k,n){this.upd(id,c=>{c.goals.push({s:k,n});if(!c.done)c.live=true;return c;});}
   delGoal(id,i){this.upd(id,c=>{c.goals.splice(i,1);return c;});}
+  reset(id){if(!confirm('Zerar este jogo? Apaga placar e gols e ele volta a não iniciado.'))return;
+    this.setState(s=>{const sc={...s.sc};delete sc[id];return {sc};});
+    if(this.fx)this.fx.D.remove(this.fx.D.ref(this.fx.db,'sumula/'+id)).catch(()=>this.setState({sync:'erro'}));}
   pen(id,k,d){this.upd(id,c=>{c[k]=Math.max(0,(c[k]||0)+d);return c;});}
   step(d){const L=this._all||[];const i=L.findIndex(m=>m.id===this._sel);const j=Math.min(L.length-1,Math.max(0,i+d));if(L[j])this.setState({sel:L[j].id});}
   finish(id){this.upd(id,c=>({...c,live:false,done:true}));const L=this._all||[];const i=L.findIndex(m=>m.id===id);
@@ -670,7 +678,7 @@ class Component extends DCLogic {
     const rank=(arr,same)=>arr.map((x,i)=>{const p=i>0&&same(arr[i-1],x)?null:i+1;return x._p=p??arr[i-1]._p,x;})
       .map(x=>({...x,pos:x._p,posBg:x._p===1?GOLD:'#EFEDE8',posFg:BLACK}));
     const scorers=rank(Object.entries(sMap).map(([k,g])=>{const [t,n]=k.split('|');return {name:n,team:TEAMS[t].name,color:TEAMS[t].color,g};})
-      .sort((x,y)=>y.g-x.g||x.name.localeCompare(y.name)),(p,q)=>p.g===q.g).slice(0,10);
+      .sort((x,y)=>y.g-x.g||x.name.localeCompare(y.name)),(p,q)=>p.g===q.g);
     const keepers=rank(Object.entries(kMap).map(([t,v])=>({name:TEAMS[t].p[6],team:TEAMS[t].name,color:TEAMS[t].color,...v}))
       .sort((x,y)=>x.gs-y.gs||y.j-x.j),(p,q)=>p.gs===q.gs&&p.j===q.j);
     // admin
@@ -688,7 +696,11 @@ class Component extends DCLogic {
         onOG:()=>this.goal(sel,k,'Gol contra'),pen:String(cr[pk]||0),penMinus:()=>this.pen(sel,pk,-1),penPlus:()=>this.pen(sel,pk,1)};
     });
     return {
-      scorers,noScorers:!scorers.length,keepers,noKeepers:!keepers.length,
+      scorers:this.state.allS?scorers:scorers.slice(0,7),noScorers:!scorers.length,
+      keepers:this.state.allK?keepers:keepers.slice(0,7),noKeepers:!keepers.length,
+      moreS:scorers.length>7,moreK:keepers.length>7,
+      sBtn:this.state.allS?'Ver menos':'Ver todos ('+scorers.length+')',kBtn:this.state.allK?'Ver menos':'Ver todos ('+keepers.length+')',
+      toggleS:()=>this.setState(s=>({allS:!s.allS})),toggleK:()=>this.setState(s=>({allK:!s.allK})),
       nav,mobile,desktop:!mobile,mainPad:mobile?'calc(62px + env(safe-area-inset-bottom))':'0px',
       tCols:mobile?'30px minmax(0,1fr) repeat(5,26px) 34px':'52px minmax(0,1fr) repeat(7,44px) 56px',
       goHome:()=>this.go('home'),goJogos:()=>this.go('jogos'),goRegras:()=>this.go('regras'),
@@ -742,6 +754,7 @@ class Component extends DCLogic {
       showPens:cur.ko&&(cr.live||cr.done)&&cr.h===cr.a,
       sWaiting:!cr.live&&!cr.done,sLive:cr.live,sDone:cr.done,
       onStart:()=>this.upd(sel,c=>({...c,live:true})),onFinish:()=>this.finish(sel),onReopen:()=>this.upd(sel,c=>({...c,live:true,done:false})),
+      canReset:cr.live||cr.done||cr.goals.length>0,onReset:()=>this.reset(sel),
       hasGoals:cr.goals.length>0,
       goalsList:cr.goals.map((g,i)=>{const code=g.s==='h'?cur.h:cur.a;return {n:g.n,team:tn(code,''),color:code?TEAMS[code].color:'transparent',onDel:()=>this.delGoal(sel,i)};}).reverse(),
     };
