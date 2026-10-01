@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F5F4F1;color:#111;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#C8102E;text-decoration:none}
+a:hover{color:#8E0B20}
+input:focus{outline:2px solid #C8102E;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<header style="position:sticky;top:0;z-index:20;background:#C8102E">
+  <div style="max-width:1240px;margin:0 auto;padding:0 20px;min-height:60px;display:flex;align-items:center;gap:24px">
+    <button onClick="{{ goHome }}" style="background:none;border:0;padding:0;cursor:pointer;display:flex;align-items:baseline;gap:8px;color:#fff;flex-shrink:0">
+      <span style="font-family:'Barlow Condensed';font-weight:800;font-size:26px;letter-spacing:0.02em">SUPERCOCA</span>
+      <span style="font-family:'Barlow Condensed';font-weight:800;font-size:18px;letter-spacing:0.04em;color:#F2C94C">2027</span>
+    </button>
+    <sc-if value="{{ desktop }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;gap:26px;margin-left:auto;align-self:stretch">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+          <button onClick="{{ n.onClick }}" style="border:0;background:none;cursor:pointer;padding:0;display:flex;align-items:center;font-family:'Barlow Condensed';font-weight:700;font-size:17px;letter-spacing:0.08em;text-transform:uppercase;color:#fff;border-bottom:3px solid {{ n.line }};border-top:3px solid transparent;opacity:{{ n.op }}">{{ n.label }}</button>
+        </sc-for>
+      </nav>
+    </sc-if>
+  </div>
+</header>
+<sc-if value="{{ mobile }}" hint-placeholder-val="{{ true }}">
+  <nav style="position:fixed;left:0;right:0;bottom:0;z-index:30;background:#C8102E;box-shadow:0 -2px 14px rgba(0,0,0,0.2);padding:6px 6px calc(6px + env(safe-area-inset-bottom));display:grid;gap:4px;grid-template-columns:repeat(6,minmax(0,1fr))">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+      <button onClick="{{ n.onClick }}" style="border:0;cursor:pointer;min-height:50px;border-radius:3px;padding:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed';font-weight:700;font-size:14px;letter-spacing:0.06em;text-transform:uppercase;background:{{ n.mbg }};color:{{ n.mfg }}">{{ n.short }}</button>
+    </sc-for>
+  </nav>
+</sc-if>
+
+<main style="flex:1;width:100%">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <section style="min-height:min(88vh,780px);border-bottom:6px solid #C8102E;display:flex;align-items:flex-end;color:#fff;background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0.35) 45%,rgba(0,0,0,0.82) 100%),url(fotos/arquibancada.jpg) center/cover">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:48px 20px clamp(40px,7vw,72px);display:flex;flex-direction:column;gap:18px">
+      <span style="font-size:13px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.85)">Federação A.Mentz apresenta · 5ª edição</span>
+      <h1 style="margin:0;font-family:'Barlow Condensed';font-weight:800;font-size:clamp(64px,15vw,168px);line-height:0.86;letter-spacing:-0.005em">SUPERCOCA<span style="display:block;color:#C8102E">2027</span></h1>
+      <div style="width:56px;height:2px;background:#C9A227"></div>
+      <span style="font-size:clamp(16px,2vw,19px);font-weight:500">Ventura Xangrilá · Data a definir</span>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+        <button onClick="{{ goJogos }}" style="border:0;cursor:pointer;background:#C8102E;color:#fff;min-height:50px;padding:0 26px;border-radius:2px;font-family:'Barlow Condensed';font-weight:700;font-size:18px;letter-spacing:0.08em;text-transform:uppercase" style-hover="background:#8E0B20">Ver jogos</button>
+        <button onClick="{{ goRegras }}" style="cursor:pointer;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.8);min-height:50px;padding:0 26px;border-radius:2px;font-family:'Barlow Condensed';font-weight:700;font-size:18px;letter-spacing:0.08em;text-transform:uppercase" style-hover="background:#fff;color:#111">Regulamento</button>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,88px) 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px 64px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="width:56px;height:5px;background:#C8102E"></div>
+      <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(34px,5vw,52px);line-height:1;text-transform:uppercase">Sobre o Torneio</h2>
+      <p style="margin:0;font-size:17px;line-height:1.65;color:#3A3834;text-wrap:pretty">A SuperCoca é um dos eventos esportivos mais aguardados do litoral gaúcho, e chega à sua 5ª edição em 2027. O torneio reúne craques e “bagres” numa competição que mistura talento, diversão e muita emoção.</p>
+      <p style="margin:0;font-size:17px;line-height:1.65;color:#3A3834;text-wrap:pretty">Mais do que um torneio, é um espetáculo que atrai gente de toda a praia para a beira do campo.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;background:#C8102E;color:#fff;border-radius:2px;overflow:hidden">
+      <div style="padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.28);border-right:1px solid rgba(255,255,255,0.28);display:flex;flex-direction:column;gap:6px"><span style="font-family:'Barlow Condensed';font-weight:700;font-size:clamp(52px,12vw,72px);line-height:0.9;color:#fff">49</span><span style="font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.88)">jogadores</span></div>
+      <div style="padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.28);display:flex;flex-direction:column;gap:6px"><span style="font-family:'Barlow Condensed';font-weight:700;font-size:clamp(52px,12vw,72px);line-height:0.9;color:#fff">7</span><span style="font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.88)">potes</span></div>
+      <div style="padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.28);border-right:1px solid rgba(255,255,255,0.28);display:flex;flex-direction:column;gap:6px"><span style="font-family:'Barlow Condensed';font-weight:700;font-size:clamp(52px,12vw,72px);line-height:0.9;color:#fff">7</span><span style="font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.88)">times sorteados</span></div>
+      <div style="padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.28);display:flex;flex-direction:column;gap:6px"><span style="font-family:'Barlow Condensed';font-weight:700;font-size:clamp(52px,12vw,72px);line-height:0.9;color:#F2C94C">0</span><span style="font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.88)">chuteiras</span></div>
+    </div>
+  </section>
+
+  <section style="background:#fff;border-top:1px solid #E3E0DA;border-bottom:1px solid #E3E0DA">
+    <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,88px) 20px;display:flex;flex-direction:column;gap:32px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="width:56px;height:5px;background:#C8102E"></div>
+        <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(34px,5vw,52px);line-height:1;text-transform:uppercase">Últimos Campeões</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px 48px;align-items:start">
+        <div style="display:flex;flex-direction:column;border-top:1px solid #111">
+          <sc-for list="{{ champions }}" as="c" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:12px;align-items:center;padding:16px 14px;border-bottom:1px solid #E3E0DA;background:{{ c.bg }}">
+              <span style="font-family:'Barlow Condensed';font-weight:700;font-size:26px;color:{{ c.yc }}">{{ c.year }}</span>
+              <span style="font-weight:600;font-size:17px;color:{{ c.tc }}">{{ c.team }}</span>
+              <span style="font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:{{ c.ec }}">{{ c.ed }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="aspect-ratio:3/2;min-height:240px;border-radius:2px;overflow:hidden;display:flex;align-items:flex-end;padding:24px;color:#fff;background:linear-gradient(transparent 50%,rgba(0,0,0,0.82)),url(fotos/campeao-2026.png) center 60%/cover">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#E3C35A">Campeão 2026</span>
+            <span style="font-family:'Barlow Condensed';font-weight:700;font-size:clamp(28px,6vw,36px);line-height:1;text-transform:uppercase">Independiente Del Verde</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="color:#fff;background:linear-gradient(rgba(12,12,12,0.86),rgba(12,12,12,0.92)),url(fotos/trofeus.jpg) center/cover">
+    <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,8vw,88px) 20px;display:flex;flex-direction:column;gap:32px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="width:56px;height:5px;background:#C9A227"></div>
+        <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(34px,5vw,52px);line-height:1;text-transform:uppercase">Premiações</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px">
+        <div style="background:#F2C94C;color:#111;border-radius:2px;padding:24px 20px;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Barlow Condensed';font-weight:800;font-size:28px;line-height:1;text-transform:uppercase">Troféu SuperCoca</span><span style="font-size:15px;font-weight:500;color:rgba(17,17,17,0.78)">Time campeão</span></div>
+        <div style="background:#C8102E;border-radius:2px;padding:24px 20px;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Barlow Condensed';font-weight:800;font-size:28px;line-height:1;text-transform:uppercase">Cocástico</span><span style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.88)">Melhor jogador</span></div>
+        <div style="background:#fff;color:#111;border-radius:2px;padding:24px 20px;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Barlow Condensed';font-weight:800;font-size:28px;line-height:1;text-transform:uppercase">Luva de Ouro</span><span style="font-size:15px;font-weight:500;color:#55524C">Melhor goleiro</span></div>
+        <div style="background:#0A0A0A;border:1.5px solid #C9A227;border-radius:2px;padding:24px 20px;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Barlow Condensed';font-weight:800;font-size:28px;line-height:1;text-transform:uppercase">Bagre de Ouro</span><span style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.88)">Pior jogador do torneio</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:24px 16px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="aspect-ratio:3/2;border-radius:2px;background:url(fotos/premiados-1.png) center/cover"></div>
+          <div style="display:flex;flex-direction:column">
+            <span style="font-family:'Barlow Condensed';font-weight:800;font-size:24px;text-transform:uppercase;padding-bottom:8px">Premiados <span style="color:#F2C94C">SuperCoca 2026</span></span>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.14)"><span style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75)">Bola de Ouro</span><span style="font-weight:700;font-size:16px;text-align:right">Lucas Iepsen</span></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.14)"><span style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75)">Bagre d'Or</span><span style="font-weight:700;font-size:16px;text-align:right">Enrico Fuentes</span></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.14)"><span style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75)">Artilheiro</span><span style="font-weight:700;font-size:16px;text-align:right">Bruno</span></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.14)"><span style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75)">Cocástico</span><span style="font-weight:700;font-size:16px;text-align:right">King Meira</span></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.14)"><span style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75)">Melhor goleiro</span><span style="font-weight:700;font-size:16px;text-align:right">Farelo</span></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="aspect-ratio:3/2;border-radius:2px;background:url(fotos/premiados-2.png) center/cover"></div>
+          <div style="display:flex;flex-direction:column">
+            <span style="font-family:'Barlow Condensed';font-weight:800;font-size:24px;text-transform:uppercase;padding-bottom:8px">Premiados <span style="color:#F2C94C">SuperCoca 2025</span></span>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.14)"><span style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75)">Melhor jogador e artilheiro</span><span style="font-weight:700;font-size:16px;text-align:right">Pepê</span></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.14)"><span style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75)">Bagre d'Or</span><span style="font-weight:700;font-size:16px;text-align:right">Rabiot</span></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.14)"><span style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75)">Cocástico</span><span style="font-weight:700;font-size:16px;text-align:right">Krieger</span></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.14)"><span style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.75)">Melhor goleiro</span><span style="font-weight:700;font-size:16px;text-align:right">Suc</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isPotes }}" hint-placeholder-val="{{ false }}">
+  <section style="min-height:clamp(280px,46vh,480px);border-bottom:6px solid #C8102E;display:flex;align-items:flex-end;color:#fff;background:linear-gradient(180deg,rgba(0,0,0,0.25),rgba(0,0,0,0.8)),url(fotos/jogo-noite.jpg) center/cover">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:40px 20px;display:flex;flex-direction:column;gap:12px"><div style="width:56px;height:5px;background:#C8102E"></div><h1 style="margin:0;font-family:'Barlow Condensed';font-weight:800;font-size:clamp(40px,8vw,88px);line-height:0.95;text-transform:uppercase;text-wrap:balance">Potes da SuperCoca 2027</h1><span style="font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,0.85)">Distribuição de jogadores em potes</span></div>
+  </section>
+  <section style="background:#111;color:#fff">
+    <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,7vw,72px) 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:36px 56px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#F2C94C">Potes SuperCOCA V</span>
+          <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:800;font-size:clamp(34px,5vw,54px);line-height:0.95;text-transform:uppercase">Como funciona o sorteio</h2>
+        </div>
+        <div style="display:flex;flex-direction:column">
+          <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,0.16)"><span style="font-family:'Barlow Condensed';font-weight:800;font-size:44px;line-height:0.9;color:#C8102E">01</span><span style="font-size:16px;line-height:1.5;color:rgba(255,255,255,0.88)"><strong style="color:#fff">49 inscritos</strong> são divididos em 7 potes pelo nível técnico.</span></div>
+          <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,0.16)"><span style="font-family:'Barlow Condensed';font-weight:800;font-size:44px;line-height:0.9;color:#C8102E">02</span><span style="font-size:16px;line-height:1.5;color:rgba(255,255,255,0.88)">Cada time puxa <strong style="color:#fff">um jogador de cada pote</strong>, goleiro incluso.</span></div>
+          <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:14px;padding:16px 0;border-top:1px solid rgba(255,255,255,0.16);border-bottom:1px solid rgba(255,255,255,0.16)"><span style="font-family:'Barlow Condensed';font-weight:800;font-size:44px;line-height:0.9;color:#C8102E">03</span><span style="font-size:16px;line-height:1.5;color:rgba(255,255,255,0.88)">Cada pote tem <strong style="color:#fff">2 a 3 reservas</strong>. Quem sai é reposto pelo mesmo pote.</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;font-family:'Barlow Condensed';font-weight:700;font-size:15px;letter-spacing:0.14em;text-transform:uppercase"><span style="color:#F2C94C">Craques</span><span style="color:rgba(255,255,255,0.6)">Bagres</span></div>
+        <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px">
+          <sc-for list="{{ poteScale }}" as="p" hint-placeholder-count="6">
+            <div style="aspect-ratio:3/4;border-radius:2px;display:flex;flex-direction:column;justify-content:space-between;padding:8px;background:{{ p.bg }};color:{{ p.fg }};border:1px solid rgba(255,255,255,0.18)">
+              <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;opacity:0.8">Pote</span>
+              <span style="font-family:'Barlow Condensed';font-weight:800;font-size:clamp(34px,7vw,56px);line-height:0.85">{{ p.n }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="height:6px;border-radius:1px;background:linear-gradient(90deg,#C9A227,#C8102E 45%,#1a1a1a)"></div>
+        <div style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;margin-top:6px;padding:12px;background:#C8102E;border-radius:2px">
+          <span style="font-family:'Barlow Condensed';font-weight:800;font-size:32px;line-height:1;padding:0 6px">GOL</span>
+          <span style="font-size:14px;line-height:1.4">Pote exclusivo de goleiros: um por time, fora da escala de nível.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(40px,7vw,72px) 16px clamp(48px,8vw,88px);display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+      <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(30px,4.4vw,44px);line-height:1;text-transform:uppercase;color:#C8102E">Os 7 potes</h2>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{ posLegend }}" as="l" hint-placeholder-count="5">
+          <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:#55524C"><span style="min-width:38px;height:22px;padding:0 6px;display:grid;place-items:center;border-radius:2px;font-family:'Barlow Condensed';font-weight:700;font-size:13px;letter-spacing:0.06em;background:{{ l.bg }};color:{{ l.fg }};border:1.5px solid {{ l.bd }}">{{ l.code }}</span>{{ l.label }}</span>
+        </sc-for>
+      </div>
+    </div>
+    <sc-if value="{{ showSampleNote }}" hint-placeholder-val="{{ false }}">
+      <div style="border:1px solid #D9C27A;background:#FBF7EA;padding:12px 16px;font-weight:500;font-size:14px;color:#5A4A12">Pré-sorteio: exibindo os potes de 2026 como exemplo.</div>
+    </sc-if>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:18px">
+      <sc-for list="{{ potes }}" as="p" hint-placeholder-count="7">
+        <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 0 rgba(0,0,0,0.04)">
+          <div style="position:relative;min-height:150px;padding:18px 20px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;background:{{ p.headBg }};color:{{ p.fg }}">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:{{ p.tagColor }}">{{ p.tag }}</span>
+              <span style="font-family:'Barlow Condensed';font-weight:800;font-size:30px;line-height:1;text-transform:uppercase">{{ p.title }}</span>
+              <div style="display:flex;gap:3px">
+                <sc-for list="{{ p.meter }}" as="m" hint-placeholder-count="6"><span style="width:16px;height:5px;background:{{ m.c }}"></span></sc-for>
+              </div>
+            </div>
+            <span style="font-family:'Barlow Condensed';font-weight:800;font-size:108px;line-height:0.72;letter-spacing:-0.02em;opacity:0.95">{{ p.num }}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;padding:4px 0">
+            <sc-for list="{{ p.players }}" as="pl" hint-placeholder-count="7">
+              <div style="display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:0 20px;min-height:46px;border-bottom:1px solid #F0EEEA">
+                <span style="font-family:'Barlow Condensed';font-weight:700;font-size:15px;color:#B5B1A8">{{ pl.idx }}</span>
+                <span style="font-weight:600;font-size:16px">{{ pl.name }}</span>
+                <span style="min-width:44px;height:24px;padding:0 6px;display:grid;place-items:center;border-radius:2px;font-family:'Barlow Condensed';font-weight:700;font-size:13px;letter-spacing:0.06em;background:{{ pl.bg }};color:{{ pl.fg }};border:1.5px solid {{ pl.bd }}">{{ pl.pos }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:auto;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 20px;background:#F5F4F1;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#6B6862">
+            <span>{{ p.summary }}</span><span>+ 2–3 reservas</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isTimes }}" hint-placeholder-val="{{ false }}">
+  <section style="min-height:clamp(280px,46vh,480px);border-bottom:6px solid #C8102E;display:flex;align-items:flex-end;color:#fff;background:linear-gradient(180deg,rgba(0,0,0,0.25),rgba(0,0,0,0.8)),url(fotos/times-perfilados.jpg) center/cover">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:40px 20px;display:flex;flex-direction:column;gap:12px"><div style="width:56px;height:5px;background:#C8102E"></div><h1 style="margin:0;font-family:'Barlow Condensed';font-weight:800;font-size:clamp(40px,8vw,88px);line-height:0.95;text-transform:uppercase;text-wrap:balance">Times da SuperCoca 2027</h1><span style="font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,0.85)">Lista de jogadores de cada time</span></div>
+  </section>
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(40px,7vw,72px) 16px clamp(48px,8vw,88px);display:flex;flex-direction:column;gap:28px">
+    <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(30px,4.4vw,44px);line-height:1;text-transform:uppercase;color:#C8102E">Times Participantes</h2>
+    <sc-if value="{{ showSampleNote }}" hint-placeholder-val="{{ false }}">
+      <div style="border:1px solid #D9C27A;background:#FBF7EA;padding:12px 16px;font-weight:500;font-size:14px;color:#5A4A12">Pré-sorteio: exibindo os times de 2026 como exemplo.</div>
+    </sc-if>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px">
+      <sc-for list="{{ teams }}" as="t" hint-placeholder-count="7">
+        <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;gap:12px;padding:16px 18px">
+            <span style="width:14px;height:14px;flex-shrink:0;border:1.5px solid #111;background:{{ t.color }}"></span>
+            <span style="font-family:'Barlow Condensed';font-weight:700;font-size:23px;line-height:1.05;text-transform:uppercase">{{ t.name }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr auto;padding:8px 18px;background:#C8102E;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#fff"><span>Jogador</span><span>Pote</span></div>
+          <sc-for list="{{ t.players }}" as="pl" hint-placeholder-count="7">
+            <div style="display:grid;grid-template-columns:1fr auto;align-items:center;padding:0 18px;min-height:44px;border-bottom:1px solid #EFEDE8;font-size:16px"><span style="font-weight:500">{{ pl.name }}</span><span style="min-width:34px;height:24px;padding:0 6px;display:grid;place-items:center;border-radius:2px;font-family:'Barlow Condensed';font-weight:700;font-size:14px;letter-spacing:0.04em;background:{{ pl.bg }};color:{{ pl.fg }}">{{ pl.pote }}</span></div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isJogos }}" hint-placeholder-val="{{ false }}">
+  <section style="min-height:clamp(280px,46vh,480px);border-bottom:6px solid #C8102E;display:flex;align-items:flex-end;color:#fff;background:linear-gradient(180deg,rgba(0,0,0,0.25),rgba(0,0,0,0.8)),url(fotos/campo-panorama.jpg) center/cover">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:40px 20px;display:flex;flex-direction:column;gap:12px"><div style="width:56px;height:5px;background:#C8102E"></div><h1 style="margin:0;font-family:'Barlow Condensed';font-weight:800;font-size:clamp(40px,8vw,88px);line-height:0.95;text-transform:uppercase;text-wrap:balance">Jogos da SuperCoca 2027</h1><span style="font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,0.85)">Grupos: 15 min corridos · Mata-mata: 2 × 12 min</span></div>
+  </section>
+  <section style="max-width:960px;margin:0 auto;padding:clamp(40px,7vw,72px) 16px clamp(48px,8vw,88px);display:flex;flex-direction:column;gap:36px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(30px,4.4vw,44px);line-height:1;text-transform:uppercase;color:#C8102E">Tabela de Jogos</h2>
+    </div>
+    <sc-for list="{{ days }}" as="d" hint-placeholder-count="2">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px;padding:12px 16px;background:#111;color:#fff">
+          <span style="font-family:'Barlow Condensed';font-weight:700;font-size:24px;letter-spacing:0.04em;text-transform:uppercase;color:#F2C94C">{{ d.label }}</span>
+          <span style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.88)">{{ d.sub }}</span>
+        </div>
+        <sc-for list="{{ d.rounds }}" as="r" hint-placeholder-count="3">
+          <div style="background:#fff;border:1px solid #E3E0DA;border-top:3px solid {{ r.border }};border-radius:2px;padding:14px 16px 6px;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;padding-bottom:6px">
+              <span style="font-family:'Barlow Condensed';font-weight:700;font-size:20px;letter-spacing:0.03em;text-transform:uppercase;color:{{ r.titleColor }}">{{ r.title }}</span>
+              <span style="font-size:13px;color:#6B6862">{{ r.folga }}</span>
+            </div>
+            <sc-for list="{{ r.matches }}" as="m" hint-placeholder-count="3">
+              <div style="border-top:1px solid #EFEDE8;padding:10px 0 8px;display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;justify-content:space-between;gap:8px;font-family:'Barlow Condensed';font-size:14px;font-weight:600;letter-spacing:0.06em;color:#8A867E"><span>{{ m.time }}</span><span style="font-weight:700;color:{{ m.stColor }}">{{ m.penTxt }}</span></div>
+                <sc-for list="{{ m.sides }}" as="s" hint-placeholder-count="2">
+                  <div style="display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:12px;align-items:center;min-height:46px">
+                    <span style="width:12px;height:12px;border:1.5px solid #111;background:{{ s.color }}"></span>
+                    <span style="display:flex;flex-direction:column;min-width:0"><span style="font-weight:600;font-size:16px;line-height:1.2;text-wrap:pretty;opacity:{{ s.op }}">{{ s.name }}</span><span style="font-size:12px;color:#8A867E">{{ s.sub }}</span><span style="font-size:13px;font-weight:600;color:#C8102E;line-height:1.3">{{ s.goals }}</span></span>
+                    <span style="width:44px;height:40px;display:grid;place-items:center;border-radius:2px;font-family:'Barlow Condensed';font-weight:700;font-size:22px;background:{{ s.bg }};color:{{ s.fg }}">{{ s.score }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isTabela }}" hint-placeholder-val="{{ false }}">
+  <section style="min-height:clamp(280px,46vh,480px);border-bottom:6px solid #C8102E;display:flex;align-items:flex-end;color:#fff;background:linear-gradient(180deg,rgba(0,0,0,0.25),rgba(0,0,0,0.8)),url(fotos/classificacao-bg.png) center 40%/cover">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:40px 20px;display:flex;flex-direction:column;gap:12px"><div style="width:56px;height:5px;background:#C8102E"></div><h1 style="margin:0;font-family:'Barlow Condensed';font-weight:800;font-size:clamp(40px,8vw,88px);line-height:0.95;text-transform:uppercase;text-wrap:balance">Classificação da SuperCoca 2027</h1><span style="font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,0.85)">{{ playedTxt }}</span></div>
+  </section>
+  <section style="max-width:1100px;margin:0 auto;padding:clamp(40px,7vw,72px) 16px clamp(48px,8vw,88px);display:flex;flex-direction:column;gap:56px">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(30px,4.4vw,44px);line-height:1;text-transform:uppercase;color:#C8102E">Fase de Grupos</h2>
+        <span style="font-size:14px;color:#6B6862">Desempate: confronto direto, saldo, gols marcados</span>
+      </div>
+      <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:{{ tCols }};gap:4px;padding:10px 10px;background:#C8102E;color:#fff;font-family:'Barlow Condensed';font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-align:center">
+          <span>#</span><span style="text-align:left">Time</span><span>J</span><span>V</span><span>E</span><span>D</span><sc-if value="{{ desktop }}" hint-placeholder-val="{{ false }}"><span>GP</span><span>GC</span></sc-if><span>SG</span><span>PTS</span>
+        </div>
+        <sc-for list="{{ table }}" as="r" hint-placeholder-count="7">
+          <div style="display:grid;grid-template-columns:{{ tCols }};gap:4px;padding:8px 10px;min-height:52px;align-items:center;text-align:center;font-size:15px;font-variant-numeric:tabular-nums;border-top:1px solid #EFEDE8">
+            <span style="justify-self:center;width:26px;height:26px;border-radius:2px;display:grid;place-items:center;font-family:'Barlow Condensed';font-weight:700;font-size:16px;background:{{ r.posBg }};color:{{ r.posFg }}">{{ r.pos }}</span>
+            <span style="display:flex;align-items:center;gap:10px;text-align:left;min-width:0">
+              <span style="width:12px;height:12px;flex-shrink:0;border:1.5px solid #111;background:{{ r.color }}"></span>
+              <span style="font-weight:600;font-size:15px;line-height:1.15;text-wrap:pretty">{{ r.name }}</span>
+            </span>
+            <span>{{ r.j }}</span><span>{{ r.v }}</span><span>{{ r.e }}</span><span>{{ r.d }}</span><sc-if value="{{ desktop }}" hint-placeholder-val="{{ false }}"><span>{{ r.gp }}</span><span>{{ r.gc }}</span></sc-if><span>{{ r.sgTxt }}</span>
+            <span style="font-family:'Barlow Condensed';font-weight:700;font-size:20px">{{ r.pts }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:10px 22px;flex-wrap:wrap;font-size:13px;color:#3A3834">
+        <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#C8102E"></span>Direto à semifinal</span>
+        <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#C9A227"></span>Quartas de final</span>
+        <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#D9D6CF"></span>Eliminado</span>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px 32px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(30px,4.4vw,44px);line-height:1;text-transform:uppercase;color:#C8102E">Artilharia</h2><span style="font-size:14px;color:#6B6862">Gols contra não contam</span></div>
+        <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;overflow:hidden">
+          <div style="display:grid;gap:4px;padding:10px 14px;background:#C8102E;color:#fff;font-family:'Barlow Condensed';font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;grid-template-columns:40px minmax(0,1fr) 56px"><span>#</span><span>Jogador</span><span style="text-align:center">Gols</span></div>
+          <sc-if value="{{ noScorers }}" hint-placeholder-val="{{ false }}"><div style="padding:22px 14px;border-top:1px solid #EFEDE8;font-size:14px;color:#8A867E">Nenhum gol marcado ainda.</div></sc-if>
+          <sc-for list="{{ scorers }}" as="p" hint-placeholder-count="5">
+            <div style="display:grid;gap:4px;padding:8px 14px;min-height:52px;align-items:center;border-top:1px solid #EFEDE8;font-size:15px;grid-template-columns:40px minmax(0,1fr) 56px">
+              <span style="justify-self:start;width:26px;height:26px;border-radius:2px;display:grid;place-items:center;font-family:'Barlow Condensed';font-weight:700;font-size:16px;background:{{ p.posBg }};color:{{ p.posFg }}">{{ p.pos }}</span><span style="display:flex;flex-direction:column;min-width:0"><span style="font-weight:600;line-height:1.2">{{ p.name }}</span><span style="display:flex;align-items:center;gap:6px;font-size:12px;color:#8A867E"><span style="width:10px;height:10px;flex-shrink:0;border:1.5px solid #111;background:{{ p.color }}"></span>{{ p.team }}</span></span>
+              <span style="text-align:center;font-family:'Barlow Condensed';font-weight:800;font-size:24px">{{ p.g }}</span>
+            </div>
+          </sc-for>
+          <sc-if value="{{ moreS }}" hint-placeholder-val="{{ false }}"><button onClick="{{ toggleS }}" style="width:100%;min-height:48px;border:0;border-top:1px solid #EFEDE8;background:#F5F4F1;color:#C8102E;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:15px">{{ sBtn }}</button></sc-if>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(30px,4.4vw,44px);line-height:1;text-transform:uppercase;color:#C8102E">Goleiro menos vazado</h2><span style="font-size:14px;color:#6B6862">Menos gols sofridos; empate: mais jogos</span></div>
+        <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;overflow:hidden">
+          <div style="display:grid;gap:4px;padding:10px 14px;background:#C8102E;color:#fff;font-family:'Barlow Condensed';font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;grid-template-columns:40px minmax(0,1fr) 36px 48px"><span>#</span><span>Goleiro</span><span style="text-align:center">J</span><span style="text-align:center">GS</span></div>
+          <sc-if value="{{ noKeepers }}" hint-placeholder-val="{{ false }}"><div style="padding:22px 14px;border-top:1px solid #EFEDE8;font-size:14px;color:#8A867E">Nenhum jogo encerrado ainda.</div></sc-if>
+          <sc-for list="{{ keepers }}" as="p" hint-placeholder-count="5">
+            <div style="display:grid;gap:4px;padding:8px 14px;min-height:52px;align-items:center;border-top:1px solid #EFEDE8;font-size:15px;grid-template-columns:40px minmax(0,1fr) 36px 48px">
+              <span style="justify-self:start;width:26px;height:26px;border-radius:2px;display:grid;place-items:center;font-family:'Barlow Condensed';font-weight:700;font-size:16px;background:{{ p.posBg }};color:{{ p.posFg }}">{{ p.pos }}</span><span style="display:flex;flex-direction:column;min-width:0"><span style="font-weight:600;line-height:1.2">{{ p.name }}</span><span style="display:flex;align-items:center;gap:6px;font-size:12px;color:#8A867E"><span style="width:10px;height:10px;flex-shrink:0;border:1.5px solid #111;background:{{ p.color }}"></span>{{ p.team }}</span></span>
+              <span style="text-align:center">{{ p.j }}</span>
+              <span style="text-align:center;font-family:'Barlow Condensed';font-weight:800;font-size:24px">{{ p.gs }}</span>
+            </div>
+          </sc-for>
+          <sc-if value="{{ moreK }}" hint-placeholder-val="{{ false }}"><button onClick="{{ toggleK }}" style="width:100%;min-height:48px;border:0;border-top:1px solid #EFEDE8;background:#F5F4F1;color:#C8102E;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:15px">{{ kBtn }}</button></sc-if>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(30px,4.4vw,44px);line-height:1;text-transform:uppercase;color:#C8102E">Mata-mata</h2>
+        <span style="font-size:14px;color:#6B6862">{{ bracketNote }}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;align-items:center">
+        <sc-for list="{{ bracket }}" as="col" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <span style="font-family:'Barlow Condensed';font-weight:700;font-size:15px;letter-spacing:0.14em;text-transform:uppercase;color:#6B6862">{{ col.label }}</span>
+            <sc-for list="{{ col.games }}" as="g" hint-placeholder-count="2">
+              <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;overflow:hidden">
+                <div style="padding:7px 14px;font-family:'Barlow Condensed';font-size:14px;font-weight:600;letter-spacing:0.12em;background:{{ g.head }};color:{{ g.headFg }}">{{ g.tag }} · {{ g.time }}</div>
+                <sc-for list="{{ g.sides }}" as="s" hint-placeholder-count="2">
+                  <div style="display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 14px;min-height:48px;border-top:1px solid #EFEDE8">
+                    <span style="width:12px;height:12px;border:1.5px solid #111;background:{{ s.color }}"></span>
+                    <span style="display:flex;flex-direction:column;min-width:0"><span style="font-weight:600;line-height:1.2;text-wrap:pretty;opacity:{{ s.op }}">{{ s.name }}</span><span style="font-size:12px;color:#8A867E">{{ s.sub }}</span></span>
+                    <span style="font-family:'Barlow Condensed';font-weight:700;font-size:20px">{{ s.score }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isRegras }}" hint-placeholder-val="{{ false }}">
+  <section style="min-height:clamp(280px,46vh,480px);border-bottom:6px solid #C8102E;display:flex;align-items:flex-end;color:#fff;background:linear-gradient(180deg,rgba(0,0,0,0.25),rgba(0,0,0,0.8)),url(fotos/duelo.jpg) center 30%/cover">
+    <div style="width:100%;max-width:1240px;margin:0 auto;padding:40px 20px;display:flex;flex-direction:column;gap:12px"><div style="width:56px;height:5px;background:#C8102E"></div><h1 style="margin:0;font-family:'Barlow Condensed';font-weight:800;font-size:clamp(40px,8vw,88px);line-height:0.95;text-transform:uppercase;text-wrap:balance">Regulamento</h1><span style="font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,0.85)">5ª edição · Federação A.Mentz</span></div>
+  </section>
+  <section style="max-width:900px;margin:0 auto;padding:clamp(40px,7vw,72px) 16px clamp(48px,8vw,88px);display:flex;flex-direction:column;gap:20px">
+    <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;padding:24px 20px;display:flex;flex-direction:column;gap:12px">
+      <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:28px;text-transform:uppercase;color:#C8102E">Potes e sorteio</h2>
+      <p style="margin:0;font-size:16px;line-height:1.65;color:#3A3834">49 jovens são divididos em 7 potes pelo nível técnico: o Pote 1 reúne os 7 melhores, o Pote 6 os 7 “bagres”, os potes 2 a 5 os níveis intermediários, e há um pote exclusivo de goleiros. Cada time é sorteado puxando um jogador de cada pote.</p>
+    </div>
+    <div style="border-radius:2px;overflow:hidden;color:#fff;background:linear-gradient(90deg,rgba(120,8,26,0.96),rgba(200,16,46,0.82)),url(fotos/time-azul.jpg) center/cover;padding:26px 22px;display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#E3C35A">Novo em 2027</span>
+      <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:clamp(28px,6vw,36px);line-height:1.02;text-transform:uppercase">Substituir é obrigação, não escolha</h2>
+      <p style="margin:0;font-size:16px;line-height:1.6">Cada pote, inclusive o de goleiros, tem de 2 a 3 reservas definidos no sorteio. Em caso de lesão ou desistência, o time é obrigado a repor com um reserva do mesmo pote de quem saiu.</p>
+      <p style="margin:0;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.85)">Por quê: em 2026, dois desistentes foram substituídos por jogadores bem acima do nível de quem saiu, desequilibrando o torneio.</p>
+    </div>
+    <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;padding:24px 20px;display:flex;flex-direction:column;gap:16px">
+      <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:28px;text-transform:uppercase;color:#C8102E">Fase de grupos</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px">
+        <div style="background:#F5F4F1;border-radius:2px;padding:18px;display:flex;flex-direction:column;gap:4px"><span style="font-family:'Barlow Condensed';font-weight:700;font-size:21px;text-transform:uppercase">Turno único</span><span style="font-size:14px;color:#6B6862">Todos contra todos, uma vez.</span></div>
+        <div style="background:#F2C94C;border-radius:2px;padding:18px;display:flex;flex-direction:column;gap:4px"><span style="font-family:'Barlow Condensed';font-weight:700;font-size:21px;text-transform:uppercase">6 avançam</span><span style="font-size:14px;color:#3A3000">Seis melhores vão ao mata-mata.</span></div>
+        <div style="background:#111;color:#fff;border-radius:2px;padding:18px;display:flex;flex-direction:column;gap:4px"><span style="font-family:'Barlow Condensed';font-weight:700;font-size:21px;text-transform:uppercase">7º está fora</span><span style="font-size:14px;color:rgba(255,255,255,0.82)">O último é eliminado.</span></div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid #E3E0DA;border-radius:2px;padding:24px 20px;display:flex;flex-direction:column;gap:16px">
+      <h2 style="margin:0;font-family:'Barlow Condensed';font-weight:700;font-size:28px;text-transform:uppercase;color:#C8102E">Mata-mata “segunite”</h2>
+      <div style="border-top:3px solid #C8102E">
+        <div style="display:grid;grid-template-columns:112px minmax(0,1fr);border-bottom:1px solid #E3E0DA;font-size:15px;min-height:44px;align-items:center"><span style="font-weight:700">Quartas 1</span><span>3º × 6º</span></div>
+        <div style="display:grid;grid-template-columns:112px minmax(0,1fr);border-bottom:1px solid #E3E0DA;font-size:15px;min-height:44px;align-items:center"><span style="font-weight:700">Quartas 2</span><span>4º × 5º</span></div>
+        <div style="display:grid;grid-template-columns:112px minmax(0,1fr);border-bottom:1px solid #E3E0DA;font-size:15px;min-height:44px;align-items:center"><span style="font-weight:700">Semifinal 1</span><span>1º × vencedor das Quartas 2</span></div>
+        <div style="display:grid;grid-template-columns:112px minmax(0,1fr);border-bottom:1px solid #E3E0DA;font-size:15px;min-height:44px;align-items:center"><span style="font-weight:700">Semifinal 2</span><span>2º × vencedor das Quartas 1</span></div>
+        <div style="display:grid;grid-template-columns:112px minmax(0,1fr);border-bottom:1px solid #E3E0DA;font-size:15px;min-height:44px;align-items:center"><span style="font-weight:700">Final</span><span>Vencedores das semifinais</span></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px">
+      <div style="background:#111;color:#fff;border-radius:2px;border-top:4px solid #C8102E;padding:22px 20px;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Barlow Condensed';font-weight:700;font-size:20px;letter-spacing:0.04em;text-transform:uppercase;color:#E3C35A">Pé descalço</span><span style="font-size:15px;line-height:1.5;color:rgba(255,255,255,0.85)">Nenhum calçado é permitido, em nenhuma fase.</span></div>
+      <div style="background:#111;color:#fff;border-radius:2px;border-top:4px solid #C8102E;padding:22px 20px;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Barlow Condensed';font-weight:700;font-size:20px;letter-spacing:0.04em;text-transform:uppercase;color:#E3C35A">Duração</span><span style="font-size:15px;line-height:1.5;color:rgba(255,255,255,0.85)">Grupos: 15 min corridos. Mata-mata: 2 × 12 min.</span></div>
+      <div style="background:#111;color:#fff;border-radius:2px;border-top:4px solid #C8102E;padding:22px 20px;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Barlow Condensed';font-weight:700;font-size:20px;letter-spacing:0.04em;text-transform:uppercase;color:#E3C35A">Desempate</span><span style="font-size:15px;line-height:1.5;color:rgba(255,255,255,0.85)">Grupos: confronto direto, saldo, gols. Mata-mata: pênaltis.</span></div>
+    </div>
+    <p style="margin:8px 0 0;font-size:13px;line-height:1.6;color:#6B6862">A organização pode alterar este regulamento a qualquer momento, com aviso prévio. Casos omissos são resolvidos pela organização.</p>
+  </section>
+</sc-if>
+
+</main>
+
+<footer style="padding-bottom:{{ mainPad }};color:#fff;border-top:3px solid #C8102E;background:linear-gradient(rgba(0,0,0,0.84),rgba(0,0,0,0.9)),url(fotos/festa.jpg) center/cover">
+  <div style="max-width:1240px;margin:0 auto;padding:40px 20px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-family:'Barlow Condensed';font-weight:800;font-size:32px;letter-spacing:0.02em">SUPERCOCA <span style="color:#F2C94C">2027</span></span>
+      <span onClick="{{ footerTap }}" style="font-size:14px;color:rgba(255,255,255,0.75);user-select:none;-webkit-user-select:none;cursor:default">5ª edição · Federação A.Mentz</span>
+    </div>
+    <span style="font-size:14px;color:rgba(255,255,255,0.75)">Condomínio Ventura Xangrilá · Data a definir</span>
+  </div>
+</footer>
+
+<sc-if value="{{ showFab }}" hint-placeholder-val="{{ false }}">
+  <button onClick="{{ openSumula }}" style="position:fixed;right:16px;bottom:{{ fabBottom }};z-index:40;border:0;cursor:pointer;min-height:52px;padding:0 20px;border-radius:2px;background:#111;color:#fff;box-shadow:0 6px 20px rgba(0,0,0,0.35);display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:17px"><span style="width:10px;height:10px;border-radius:50%;background:#C8102E"></span>Súmula</button>
+</sc-if>
+<sc-if value="{{ pinOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:60;background:rgba(0,0,0,0.7);display:grid;place-items:center;padding:20px">
+    <div style="width:100%;max-width:340px;background:#fff;border-top:5px solid #C8102E;border-radius:2px;padding:24px;display:flex;flex-direction:column;gap:14px">
+      <span style="font-family:'Barlow Condensed';font-weight:800;font-size:28px;text-transform:uppercase;color:#C8102E">Acesso da organização</span>
+      <input type="email" autocomplete="username" value="{{ email }}" onChange="{{ onEmail }}" placeholder="E-mail" style="height:52px;border:1.5px solid #CFCBC3;border-radius:2px;padding:0 14px;font-size:17px;font-family:Archivo;color:#111">
+      <input type="password" autocomplete="current-password" value="{{ pin }}" onChange="{{ onPin }}" placeholder="Senha" style="height:52px;border:1.5px solid #CFCBC3;border-radius:2px;padding:0 14px;font-size:17px;font-family:Archivo;color:#111">
+      <sc-if value="{{ pinErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;font-weight:600;color:#C8102E">{{ pinErrTxt }}</span></sc-if>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <button onClick="{{ closePin }}" style="min-height:50px;border:1.5px solid #111;background:#fff;color:#111;border-radius:2px;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:16px">Cancelar</button>
+        <button onClick="{{ submitPin }}" style="min-height:50px;border:0;background:#C8102E;color:#fff;border-radius:2px;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:16px">{{ loginLabel }}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+<sc-if value="{{ sumulaOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:50;background:#111;color:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch">
+    <div style="max-width:720px;margin:0 auto;padding:14px 14px calc(28px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'Barlow Condensed';font-weight:800;font-size:24px;text-transform:uppercase">Súmula <span style="color:#F2C94C">ao vivo</span></span>
+        <span style="font-size:12px;font-weight:600;color:{{ syncColor }}">{{ syncTxt }}</span>
+        <button onClick="{{ logout }}" style="margin-left:auto;min-height:40px;padding:0 12px;border:1px solid #444;background:none;color:#BBB;border-radius:2px;cursor:pointer;font-size:13px;font-weight:600">Sair</button>
+        <button onClick="{{ closeSumula }}" style="min-height:40px;padding:0 14px;border:0;background:#fff;color:#111;border-radius:2px;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:15px">Fechar</button>
+      </div>
+      <div style="display:grid;grid-template-columns:48px minmax(0,1fr) 48px;gap:8px">
+        <button onClick="{{ onPrev }}" style="min-height:50px;border:0;background:#2A2A2A;color:#fff;border-radius:2px;cursor:pointer;font-size:22px">‹</button>
+        <select value="{{ selId }}" onChange="{{ onSel }}" style="min-height:50px;min-width:0;background:#2A2A2A;color:#fff;border:0;border-radius:2px;padding:0 10px;font-family:Archivo;font-size:15px;font-weight:600">
+          <sc-for list="{{ matchOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
+        </select>
+        <button onClick="{{ onNext }}" style="min-height:50px;border:0;background:#2A2A2A;color:#fff;border-radius:2px;cursor:pointer;font-size:22px">›</button>
+      </div>
+      <div style="background:#1C1C1C;border-top:4px solid {{ stColorA }};border-radius:2px;padding:14px 14px 18px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;font-family:'Barlow Condensed';font-weight:700;font-size:15px;letter-spacing:0.1em;text-transform:uppercase"><span style="color:#999">{{ curLabel }}</span><span style="color:{{ stColorA }}">{{ statusLabel }}</span></div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center">
+          <span style="font-family:'Barlow Condensed';font-weight:700;font-size:20px;line-height:1.05;text-transform:uppercase;text-wrap:balance">{{ hName }}</span>
+          <span style="font-family:'Barlow Condensed';font-weight:800;font-size:64px;line-height:1">{{ hScore }}<span style="color:#666;padding:0 8px">–</span>{{ aScore }}</span>
+          <span style="font-family:'Barlow Condensed';font-weight:700;font-size:20px;line-height:1.05;text-transform:uppercase;text-align:right;text-wrap:balance">{{ aName }}</span>
+        </div>
+      </div>
+      <sc-if value="{{ cantPlay }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#1C1C1C;padding:18px;border-radius:2px;color:#BBB;font-size:15px">Os times deste jogo ainda não estão definidos.</div>
+      </sc-if>
+      <sc-if value="{{ canPlay }}" hint-placeholder-val="{{ true }}">
+        <span style="font-size:13px;color:#999">Toque em quem fez o gol</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <sc-for list="{{ adminSides }}" as="sd" hint-placeholder-count="2">
+            <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;padding:4px 2px 2px"><span style="width:12px;height:12px;flex-shrink:0;border:1.5px solid #fff;background:{{ sd.color }}"></span><span style="font-family:'Barlow Condensed';font-weight:700;font-size:15px;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ sd.name }}</span></div>
+              <sc-for list="{{ sd.players }}" as="p" hint-placeholder-count="7">
+                <button onClick="{{ p.onClick }}" style="min-height:50px;border:0;border-radius:2px;background:#2A2A2A;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px;font-family:Archivo;font-weight:600;font-size:16px;text-align:left" style-active="background:#C8102E"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.name }}</span><span style="font-family:'Barlow Condensed';font-weight:800;font-size:18px;color:#F2C94C">{{ p.count }}</span></button>
+              </sc-for>
+              <button onClick="{{ sd.onOG }}" style="min-height:44px;border:1px dashed #555;border-radius:2px;background:none;color:#BBB;cursor:pointer;font-size:14px;font-weight:600">Gol contra do adversário</button>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ showPens }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#1C1C1C;border-top:4px solid #F2C94C;border-radius:2px;padding:14px;display:flex;flex-direction:column;gap:10px">
+            <span style="font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:16px;color:#F2C94C">Pênaltis</span>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <sc-for list="{{ adminSides }}" as="sd" hint-placeholder-count="2">
+                <div style="display:grid;grid-template-columns:50px 1fr 50px;align-items:center;gap:6px">
+                  <button onClick="{{ sd.penMinus }}" style="min-height:50px;border:0;border-radius:2px;background:#2A2A2A;color:#fff;font-size:22px;cursor:pointer">−</button>
+                  <span style="text-align:center;font-family:'Barlow Condensed';font-weight:800;font-size:32px">{{ sd.pen }}</span>
+                  <button onClick="{{ sd.penPlus }}" style="min-height:50px;border:0;border-radius:2px;background:#2A2A2A;color:#fff;font-size:22px;cursor:pointer">+</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ sWaiting }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ onStart }}" style="min-height:58px;border:0;border-radius:2px;background:#fff;color:#111;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:19px">Iniciar jogo</button>
+        </sc-if>
+        <sc-if value="{{ sLive }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ onFinish }}" style="min-height:58px;border:0;border-radius:2px;background:#C8102E;color:#fff;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:19px">Encerrar jogo e ir pro próximo</button>
+        </sc-if>
+        <sc-if value="{{ sDone }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <button onClick="{{ onReopen }}" style="min-height:54px;border:1.5px solid #555;border-radius:2px;background:none;color:#fff;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:16px">Reabrir jogo</button>
+            <button onClick="{{ onNext }}" style="min-height:54px;border:0;border-radius:2px;background:#fff;color:#111;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:16px">Próximo jogo ›</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ canReset }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ onReset }}" style="min-height:48px;border:1px dashed #F87171;border-radius:2px;background:none;color:#F87171;cursor:pointer;font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:15px">Zerar jogo (volta a "não iniciado")</button>
+        </sc-if>
+        <sc-if value="{{ hasGoals }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-family:'Barlow Condensed';font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:14px;color:#999">Gols do jogo · toque no × para desfazer</span>
+            <sc-for list="{{ goalsList }}" as="g" hint-placeholder-count="2">
+              <div style="display:grid;grid-template-columns:12px minmax(0,1fr) 48px;gap:10px;align-items:center;background:#1C1C1C;border-radius:2px;padding:4px 4px 4px 12px">
+                <span style="width:12px;height:12px;border:1.5px solid #fff;background:{{ g.color }}"></span>
+                <span style="display:flex;flex-direction:column;min-width:0"><span style="font-weight:600;font-size:15px">{{ g.n }}</span><span style="font-size:12px;color:#999">{{ g.team }}</span></span>
+                <button onClick="{{ g.onDel }}" style="min-height:44px;border:0;border-radius:2px;background:#2A2A2A;color:#fff;font-size:20px;cursor:pointer">×</button>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;preSorteio&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const RED='#C8102E',GOLD='#C9A227',GOLDTXT='#9C7A12',BLACK='#111111',WHITE='#FFFFFF';
+const TEAMS={
+  BRA:{name:'Branja FC',color:'#161616',p:['André','Murilo','Toledo','Bruno','Krieger','Jehad','Jaco']},
+  REG:{name:'Reggae FC',color:'#FFFFFF',p:['Rodi','Conceição','Guarda','Fuentes','Pitt','Rigo','Sucasas']},
+  GRU:{name:'Clientes Gruta Azul',color:'#2f6fe0',p:['Ph','Borba','Guiga','Ph Laba','Terra','Krupp','Igor']},
+  IDV:{name:'Independiente Del Verde',color:'#1f9d55',p:['Iepsen','Toninho','Rey','Luzes','Levin','JG','Vini Petter']},
+  ELD:{name:'Estudiantes del Laura Dreher',color:'#D6121F',p:['Echer','Trindade','Fred Tyska','Lunardi','Pedrinho','Cauã','Igna']},
+  CDP:{name:'Casa das Primas FC',color:'#F2C94C',p:['Bezinho','Bebeto','Machaus','Taddielo','Schi','Meira','Jordan']},
+  CIM:{name:'Cimirrini Bananini',color:'#8a5cf0',p:['Martin','Gabi Costa','Jonas','Lubi','Cebola','Perneta','A definir']},
+};
+const POTES=[
+  ['Pote 1','Craques',[['Rodi','ALA'],['Ph','MEIA'],['Martin','MEIA'],['Pepê','MEIA'],['Joca','MEIA'],['Bezinho','ALA'],['Echer','MEIA']]],
+  ['Pote 2','',[['Trindade','MEIA'],['Toninho','ALA'],['Gabi Costa','MEIA'],['Bebeto','ATA'],['Borba','ATA'],['Murilo','ZAG'],['Conceição','MEIA']]],
+  ['Pote 3','',[['Jonas','ZAG'],['Guiga','ALA'],['Fred','ATA'],['Machaus','MEIA'],['Toledo','ZAG'],['Guarda','ZAG'],['Rey','ALA']]],
+  ['Pote 4','',[['Fuentes','ZAG'],['Ph Laba','ALA'],['Lunardi','ATA'],['Lubi','ALA'],['Bruno','ALA'],['Dudu Luzes','MEIA'],['Taddielo','ZAG']]],
+  ['Pote 5','',[['Schi','ALA'],['Pedrinho','ZAG'],['Rossato','ALA'],['Terra','ZAG'],['Cebola','ALA'],['Pitt','ATA'],['Krieger','ATA']]],
+  ['Pote 6','Bagres',[['Rigo','ZAG'],['Jehad','ZAG'],['João Guilherme','ALA'],['Cauã','ZAG'],['Krupp','ZAG'],['Meira','ZAG'],['Perneta','ALA']]],
+  ['Goleiros','Pote exclusivo',[['Igna','GOL'],['Jordan','GOL'],['Fred TC','GOL'],['Cacique','GOL'],['Sucasas','GOL'],['Igor','GOL'],['Jaco','GOL']]],
+];
+const ROUNDS=[
+  {day:1,n:1,folga:'BRA',m:[['14:40','REG','CDP'],['15:00','GRU','IDV'],['15:20','ELD','CIM']]},
+  {day:1,n:2,folga:'IDV',m:[['15:40','BRA','CDP'],['16:00','REG','CIM'],['16:20','GRU','ELD']]},
+  {day:1,n:3,folga:'ELD',m:[['16:40','BRA','IDV'],['17:00','CDP','CIM'],['17:20','REG','GRU']]},
+  {day:1,n:4,folga:'REG',m:[['17:40','BRA','CIM'],['18:00','IDV','ELD'],['18:20','CDP','GRU']]},
+  {day:1,n:5,folga:'CDP',m:[['18:40','BRA','ELD'],['19:00','CIM','GRU'],['19:20','IDV','REG']]},
+  {day:2,n:6,folga:'CIM',m:[['14:00','BRA','GRU'],['14:20','ELD','REG'],['14:40','IDV','CDP']]},
+  {day:2,n:7,folga:'GRU',m:[['15:00','BRA','REG'],['15:20','ELD','CDP'],['15:40','CIM','IDV']]},
+];
+const GROUP=ROUNDS.flatMap(r=>r.m.map((m,i)=>({id:'r'+r.n+'-'+i,r:r.n,time:m[0],h:m[1],a:m[2]})));
+const POS={GOL:{bg:RED,fg:WHITE,bd:RED},ZAG:{bg:BLACK,fg:WHITE,bd:BLACK},ALA:{bg:'#F2C94C',fg:BLACK,bd:'#F2C94C'},MEIA:{bg:WHITE,fg:BLACK,bd:BLACK},ATA:{bg:WHITE,fg:RED,bd:RED}};
+const FB={apiKey:"AIzaSyBC7HoTnJb7hFFHY37JIDNfKp7y1P3zyhs",authDomain:"supercoca-2027.firebaseapp.com",databaseURL:"https://supercoca-2027-default-rtdb.firebaseio.com",projectId:"supercoca-2027",storageBucket:"supercoca-2027.firebasestorage.app",messagingSenderId:"476155338258",appId:"1:476155338258:web:c2a4c4879747125fdb82cb"};
+const ADMIN_UID='BlSRpn2ooiQaARFCYccqn9uV9u62';
+const normGoals=g=>Array.isArray(g)?g.filter(Boolean):g?Object.values(g):[];
+const KEY='supercoca27-sumula',AKEY='supercoca27-admin';
+const ls=(k)=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const tally=gs=>{const c={};gs.forEach(g=>c[g.n]=(c[g.n]||0)+1);return Object.entries(c).map(([n,k])=>k>1?n+' '+k:n).join(', ');};
+class Component extends DCLogic {
+  state={page:'home',mobile:typeof window!=='undefined'?window.innerWidth<820:true,
+    sc:(()=>{try{return JSON.parse(ls(KEY))||{}}catch(e){return {}}})(),
+    admin:false,pinOpen:false,email:'',pin:'',pinErr:false,pinErrTxt:'',logging:false,sync:'conectando',sumula:false,sel:null};
+  componentDidMount(){
+    this._rs=()=>{const m=window.innerWidth<820;if(m!==this.state.mobile)this.setState({mobile:m});};
+    this._hc=()=>{if(/admin/i.test(location.hash)){if(this.state.admin)this.setState({sumula:true});else this.setState({pinOpen:true});}};
+    window.addEventListener('resize',this._rs);window.addEventListener('hashchange',this._hc);this._rs();this._hc();
+    const B='https://www.gstatic.com/firebasejs/10.12.2/';
+    Promise.all([import(B+'firebase-app.js'),import(B+'firebase-database.js'),import(B+'firebase-auth.js')]).then(([A,D,U])=>{
+      if(this._dead)return;
+      const app=A.getApps().length?A.getApp():A.initializeApp(FB);
+      const db=D.getDatabase(app),auth=U.getAuth(app);
+      this.fx={D,U,db,auth};
+      this._off1=D.onValue(D.ref(db,'sumula'),snap=>{const v=snap.val()||{};const sc={};Object.keys(v).forEach(k=>sc[k]={...v[k],goals:normGoals(v[k].goals)});
+        try{localStorage.setItem(KEY,JSON.stringify(sc))}catch(e){};this.setState({sc});},err=>{console.warn('sumula read',err);this.setState({sync:'erro'});});
+      this._off2=D.onValue(D.ref(db,'.info/connected'),s=>this.setState({sync:s.val()?'online':'offline'}));
+      this._ua=U.onAuthStateChanged(auth,u=>this.setState({admin:!!u&&u.uid===ADMIN_UID}));
+    }).catch(err=>{console.warn('firebase init',err);this.setState({sync:'erro'});});
+  }
+  componentWillUnmount(){this._dead=true;[this._off1,this._off2,this._ua].forEach(f=>f&&f());window.removeEventListener('resize',this._rs);window.removeEventListener('hashchange',this._hc);}
+  go(p){this.setState({page:p});window.scrollTo({top:0});}
+  upd(id,fn){const cur=this.state.sc[id]||{};const nx=fn({...cur,goals:[...(cur.goals||[])]});
+    this.setState(s=>({sc:{...s.sc,[id]:nx}}));
+    if(this.fx)this.fx.D.set(this.fx.D.ref(this.fx.db,'sumula/'+id),nx).catch(()=>{this.setState({sync:'erro'});alert('Não foi possível salvar. Confira a internet e se você está logado.');});}
+  res(id){const s=this.state.sc[id]||{},g=s.goals||[],live=!!s.live,done=!!s.done,on=live||done;
+    return {h:on?g.filter(x=>x.s==='h').length:null,a:on?g.filter(x=>x.s==='a').length:null,ph:s.ph??null,pa:s.pa??null,live,done,goals:g};}
+  standings(){
+    const rows={};Object.keys(TEAMS).forEach(k=>rows[k]={k,j:0,v:0,e:0,d:0,gp:0,gc:0});
+    const played=[];
+    GROUP.forEach(m=>{const r=this.res(m.id);if(!r.done)return;played.push({th:m.h,ta:m.a,gh:r.h,ga:r.a});
+      const H=rows[m.h],A=rows[m.a];H.j++;A.j++;H.gp+=r.h;H.gc+=r.a;A.gp+=r.a;A.gc+=r.h;
+      if(r.h>r.a){H.v++;A.d++}else if(r.h<r.a){A.v++;H.d++}else{H.e++;A.e++}});
+    const list0=Object.values(rows).map(r=>({...r,pts:r.v*3+r.e,sg:r.gp-r.gc}));
+    const mini=grp=>{const set=new Set(grp.map(r=>r.k)),t={};grp.forEach(r=>t[r.k]={p:0,sg:0,gp:0});
+      played.forEach(p=>{if(!set.has(p.th)||!set.has(p.ta))return;
+        t[p.th].gp+=p.gh;t[p.ta].gp+=p.ga;t[p.th].sg+=p.gh-p.ga;t[p.ta].sg+=p.ga-p.gh;
+        if(p.gh>p.ga)t[p.th].p+=3;else if(p.gh<p.ga)t[p.ta].p+=3;else{t[p.th].p++;t[p.ta].p++;}});
+      return t;};
+    const byPts={};list0.forEach(r=>(byPts[r.pts]=byPts[r.pts]||[]).push(r));
+    const list=[];Object.keys(byPts).map(Number).sort((x,y)=>y-x).forEach(p=>{const g=byPts[p];
+      list.push(...this._rank(g,mini));});
+    return {list,played:played.length};
+  }
+  _rank(g,mini){
+    if(g.length<2)return g;
+    const t=mini(g),by={};g.forEach(r=>(by[t[r.k].p]=by[t[r.k].p]||[]).push(r));
+    const keys=Object.keys(by).map(Number).sort((x,y)=>y-x);
+    if(keys.length===1)return [...g].sort((x,y)=>y.sg-x.sg||y.gp-x.gp||TEAMS[x.k].name.localeCompare(TEAMS[y.k].name));
+    return keys.flatMap(k=>this._rank(by[k],mini));
+  }
+  side(code,sub){
+    if(code&&TEAMS[code])return {name:TEAMS[code].name,color:TEAMS[code].color,sub,op:1};
+    return {name:sub,color:'transparent',sub:'',op:0.55};
+  }
+  winner(id,h,a){const r=this.res(id);if(!h||!a||!r.done)return null;
+    if(r.h!==r.a)return r.h>r.a?h:a;if(r.ph==null||r.pa==null||r.ph===r.pa)return null;return r.ph>r.pa?h:a;}
+  goal(id,k,n){this.upd(id,c=>{c.goals.push({s:k,n});if(!c.done)c.live=true;return c;});}
+  delGoal(id,i){this.upd(id,c=>{c.goals.splice(i,1);return c;});}
+  reset(id){if(!confirm('Zerar este jogo? Apaga placar e gols e ele volta a não iniciado.'))return;
+    this.setState(s=>{const sc={...s.sc};delete sc[id];return {sc};});
+    if(this.fx)this.fx.D.remove(this.fx.D.ref(this.fx.db,'sumula/'+id)).catch(()=>this.setState({sync:'erro'}));}
+  pen(id,k,d){this.upd(id,c=>{c[k]=Math.max(0,(c[k]||0)+d);return c;});}
+  step(d){const L=this._all||[];const i=L.findIndex(m=>m.id===this._sel);const j=Math.min(L.length-1,Math.max(0,i+d));if(L[j])this.setState({sel:L[j].id});}
+  finish(id){this.upd(id,c=>({...c,live:false,done:true}));const L=this._all||[];const i=L.findIndex(m=>m.id===id);
+    const nx=L.slice(i+1).find(m=>!(this.state.sc[m.id]||{}).done);if(nx)this.setState({sel:nx.id});}
+  renderVals(){
+    const {page,mobile,admin}=this.state;
+    const {list,played}=this.standings();
+    const known=played>0, seed=i=>known?list[i].k:null;
+    const q1=[seed(2),seed(5)],q2=[seed(3),seed(4)];
+    const wq1=this.winner('qf1',...q1),wq2=this.winner('qf2',...q2);
+    const s1=[seed(0),wq2],s2=[seed(1),wq1];
+    const ws1=this.winner('sf1',...s1),ws2=this.winner('sf2',...s2);
+    const KO=[
+      {id:'qf1',tag:'QF1',time:'16:00',h:[q1[0],'3º colocado'],a:[q1[1],'6º colocado']},
+      {id:'qf2',tag:'QF2',time:'16:30',h:[q2[0],'4º colocado'],a:[q2[1],'5º colocado']},
+      {id:'sf1',tag:'SF1',time:'17:00',h:[s1[0],'1º colocado'],a:[s1[1],'Vencedor QF2']},
+      {id:'sf2',tag:'SF2',time:'17:40',h:[s2[0],'2º colocado'],a:[s2[1],'Vencedor QF1']},
+      {id:'final',tag:'FINAL',time:'19:20',h:[ws1,'Vencedor SF1'],a:[ws2,'Vencedor SF2']},
+    ];
+    const view=(id,time,h,a,ko)=>{
+      const r=this.res(id),on=r.h!=null,tie=on&&r.h===r.a;
+      const win=!r.done?null:r.h!==r.a?(r.h>r.a?'h':'a'):(r.ph!=null&&r.pa!=null&&r.ph!==r.pa?(r.ph>r.pa?'h':'a'):null);
+      const mk=(t,k)=>({...t,goals:tally(r.goals.filter(g=>g.s===k)),score:on?String(r[k]):'–',
+        bg:!on?'#F1EFEB':r.live?'#2A2A2A':win===k?RED:BLACK,fg:on?WHITE:'#9A968E'});
+      const pens=ko&&tie&&(r.ph||r.pa)?'PÊN. '+(r.ph||0)+'–'+(r.pa||0):'';
+      return {time,sides:[mk(h,'h'),mk(a,'a')],penTxt:r.live?('AO VIVO'+(pens?' · '+pens:'')):r.done?(pens||'ENCERRADO'):'',stColor:r.live?RED:'#8A867E'};
+    };
+    const gRound=r=>({title:'Rodada '+r.n+(r.n===7?' — última':''),titleColor:RED,border:RED,folga:'Folga: '+TEAMS[r.folga].name,
+      matches:r.m.map((m,i)=>view('r'+r.n+'-'+i,m[0],this.side(m[1],''),this.side(m[2],'')))});
+    const koRounds=[['Quartas de final',KO.slice(0,2)],['Semifinais',KO.slice(2,4)],['Final',KO.slice(4)]].map(([t,gs])=>({
+      title:t,titleColor:GOLDTXT,border:GOLD,folga:'',matches:gs.map(g=>view(g.id,g.time,this.side(...g.h),this.side(...g.a),true))}));
+    const nav=[['home','Início','Início'],['potes','Potes','Potes'],['times','Times','Times'],['tabela','Classificação','Tabela'],['jogos','Jogos','Jogos'],['regras','Regulamento','Regras']]
+      .map(([id,label,short])=>{const on=page===id;return {label,short,onClick:()=>this.go(id),line:on?WHITE:'transparent',op:on?1:0.82,mbg:on?WHITE:'transparent',mfg:on?RED:WHITE};});
+    const potColor=i=>i===0?[GOLD,BLACK]:i===5?[BLACK,WHITE]:i===6?[RED,WHITE]:['#EFEDE8',BLACK];
+    const scoreOf=(id,side)=>{const r=this.res(id);if(r.h==null)return '';const g=side==='h'?r.h:r.a,p=side==='h'?r.ph:r.pa;return p!=null&&r.h===r.a?g+' ('+p+')':String(g);};
+    const bGame=(g,head,headFg)=>({tag:g.tag,time:g.time,head,headFg,sides:[{...this.side(...g.h),score:scoreOf(g.id,'h')},{...this.side(...g.a),score:scoreOf(g.id,'a')}]});
+    const champ=ws1&&ws2?this.winner('final',ws1,ws2):null;
+
+    const mAll=[...GROUP.map(m=>({id:m.id,h:m.h,a:m.a})),...KO.map(g=>({id:g.id,h:g.h[0],a:g.a[0]}))];
+    const sMap={},kMap={};
+    mAll.forEach(m=>{if(!m.h||!m.a)return;const r=this.res(m.id);
+      r.goals.forEach(g=>{if(g.n==='Gol contra')return;const t=g.s==='h'?m.h:m.a,key=t+'|'+g.n;sMap[key]=(sMap[key]||0)+1;});
+      if(!r.done)return;[[m.h,r.a],[m.a,r.h]].forEach(([t,c])=>{kMap[t]=kMap[t]||{j:0,gs:0};kMap[t].j++;kMap[t].gs+=c;});});
+    const rank=(arr,same)=>arr.map((x,i)=>{const p=i>0&&same(arr[i-1],x)?null:i+1;return x._p=p??arr[i-1]._p,x;})
+      .map(x=>({...x,pos:x._p,posBg:x._p===1?GOLD:'#EFEDE8',posFg:BLACK}));
+    const scorers=rank(Object.entries(sMap).map(([k,g])=>{const [t,n]=k.split('|');return {name:n,team:TEAMS[t].name,color:TEAMS[t].color,g};})
+      .sort((x,y)=>y.g-x.g||x.name.localeCompare(y.name)),(p,q)=>p.g===q.g);
+    const keepers=rank(Object.entries(kMap).map(([t,v])=>({name:TEAMS[t].p[6],team:TEAMS[t].name,color:TEAMS[t].color,...v}))
+      .sort((x,y)=>x.gs-y.gs||y.j-x.j),(p,q)=>p.gs===q.gs&&p.j===q.j);
+    // admin
+    const all=[...GROUP.map(m=>({id:m.id,label:'R'+m.r+' '+m.time,h:m.h,a:m.a,ko:false})),
+      ...KO.map(g=>({id:g.id,label:g.tag+' '+g.time,h:g.h[0],a:g.a[0],hl:g.h[1],al:g.a[1],ko:true}))];
+    this._all=all;
+    const sel=this.state.sel||(all.find(m=>!this.res(m.id).done)||all[all.length-1]).id;
+    this._sel=sel;
+    const cur=all.find(m=>m.id===sel),cr=this.res(sel);
+    const tn=(c,l)=>c?TEAMS[c].name:l;
+    const adminSides=[['h',cur.h,cur.hl,'ph'],['a',cur.a,cur.al,'pa']].map(([k,code,lbl,pk])=>{
+      const mine=cr.goals.filter(g=>g.s===k);
+      return {name:tn(code,lbl),color:code?TEAMS[code].color:'transparent',
+        players:code?TEAMS[code].p.map(n=>{const c=mine.filter(g=>g.n===n).length;return {name:n,count:c?String(c):'',onClick:()=>this.goal(sel,k,n)};}):[],
+        onOG:()=>this.goal(sel,k,'Gol contra'),pen:String(cr[pk]||0),penMinus:()=>this.pen(sel,pk,-1),penPlus:()=>this.pen(sel,pk,1)};
+    });
+    return {
+      scorers:this.state.allS?scorers:scorers.slice(0,7),noScorers:!scorers.length,
+      keepers:this.state.allK?keepers:keepers.slice(0,7),noKeepers:!keepers.length,
+      moreS:scorers.length>7,moreK:keepers.length>7,
+      sBtn:this.state.allS?'Ver menos':'Ver todos ('+scorers.length+')',kBtn:this.state.allK?'Ver menos':'Ver todos ('+keepers.length+')',
+      toggleS:()=>this.setState(s=>({allS:!s.allS})),toggleK:()=>this.setState(s=>({allK:!s.allK})),
+      nav,mobile,desktop:!mobile,mainPad:mobile?'calc(62px + env(safe-area-inset-bottom))':'0px',
+      tCols:mobile?'30px minmax(0,1fr) repeat(5,26px) 34px':'52px minmax(0,1fr) repeat(7,44px) 56px',
+      goHome:()=>this.go('home'),goJogos:()=>this.go('jogos'),goRegras:()=>this.go('regras'),
+      isHome:page==='home',isPotes:page==='potes',isTimes:page==='times',isJogos:page==='jogos',isTabela:page==='tabela',isRegras:page==='regras',
+      showSampleNote:this.props.preSorteio??true,
+      champions:[['2023','Mão do Cacique FC','1ª ed.'],['2024','DM Tour FC','2ª ed.'],['2025','Lenardi FC','3ª ed.'],['2026','Independiente Del Verde','4ª ed.'],['2027',champ?TEAMS[champ].name:'A disputar','5ª ed.']]
+        .map((c,i)=>({year:c[0],team:c[1],ed:c[2],bg:i===4?RED:i===3?'#F6E7B0':'transparent',yc:i===4?WHITE:i===3?BLACK:RED,tc:i===4?WHITE:BLACK,ec:i===4?'rgba(255,255,255,0.85)':'#6B6862'})),
+      potes:POTES.map((p,i)=>{
+        const imgs=['jogador.jpg','duelo.jpg','time-azul.jpg','time-verde.jpg','jogo-noite.jpg','torcida.jpg','foto-oficial.jpg'];
+        const tint=i===0?'rgba(201,162,39,0.93),rgba(160,124,20,0.88)':i===5?'rgba(12,12,12,0.94),rgba(30,30,30,0.86)':i===6?'rgba(110,6,22,0.94),rgba(200,16,46,0.86)':'rgba(200,16,46,'+(0.95-(i-1)*0.02)+'),rgba(140,10,30,0.86)';
+        const cnt={};p[2].forEach(x=>cnt[x[1]]=(cnt[x[1]]||0)+1);
+        return {title:p[0],num:i===6?'GK':String(i+1),tag:p[1]||'Nível '+(i+1),
+          headBg:'linear-gradient(135deg,'+tint+'),url(fotos/'+imgs[i]+') center/cover',fg:i===0?BLACK:WHITE,tagColor:i===0?BLACK:i===5?'#F2C94C':'rgba(255,255,255,0.85)',
+          meter:i===6?[]:[0,1,2,3,4,5].map(k=>({c:k<6-i?(i===0?BLACK:i===5?'#F2C94C':WHITE):(i===0?'rgba(0,0,0,0.2)':'rgba(255,255,255,0.25)')})),
+          summary:Object.entries(cnt).sort((x,y)=>y[1]-x[1]).map(([k,v])=>v+' '+k).join(' · '),
+          players:p[2].map((x,j)=>({idx:String(j+1).padStart(2,'0'),name:x[0],pos:x[1],...POS[x[1]]}))};
+      }),
+      poteScale:[0,1,2,3,4,5].map(i=>({n:String(i+1),bg:i===0?GOLD:i===5?'#0A0A0A':'rgba(200,16,46,'+(1-(i-1)*0.18)+')',fg:i===0?BLACK:WHITE})),
+      posLegend:[['GOL','Goleiro'],['ZAG','Zagueiro'],['ALA','Ala'],['MEIA','Meia'],['ATA','Atacante']].map(([code,label])=>({code,label,...POS[code]})),
+      teams:Object.values(TEAMS).map(t=>({name:t.name,color:t.color,players:t.p.map((n,i)=>({name:n,pote:i===6?'GOL':i+1,bg:potColor(i)[0],fg:potColor(i)[1]}))})),
+      days:[{label:'Dia 1',sub:'Rodadas 1 a 5',rounds:ROUNDS.filter(r=>r.day===1).map(gRound)},
+            {label:'Dia 2',sub:'Rodadas 6 e 7 + mata-mata',rounds:[...ROUNDS.filter(r=>r.day===2).map(gRound),...koRounds]}],
+      playedTxt:played+' de 21 jogos disputados',
+      table:list.map((r,i)=>({...TEAMS[r.k],...r,pos:i+1,sgTxt:(r.sg>0?'+':'')+r.sg,
+        posBg:i<2?RED:i<6?GOLD:'#E3E0DA',posFg:i<2?WHITE:i<6?BLACK:'#6B6862'})),
+      bracketNote:played===21?'Classificação final':known?'Projeção pela classificação atual':'Aguardando fase de grupos',
+      bracket:[{label:'Quartas de final',games:KO.slice(0,2).map(g=>bGame(g,BLACK,WHITE))},
+               {label:'Semifinais',games:KO.slice(2,4).map(g=>bGame(g,RED,WHITE))},
+               {label:'Final',games:[bGame(KO[4],GOLD,BLACK)]}],
+      footerTap:()=>{const t=Date.now();this._taps=(this._taps||[]).filter(x=>t-x<2500).concat(t);
+        if(this._taps.length>=5){this._taps=[];this.setState(this.state.admin?{sumula:true}:{pinOpen:true,pin:'',pinErr:false});}},
+      pinOpen:this.state.pinOpen,pin:this.state.pin,email:this.state.email,pinErr:this.state.pinErr,pinErrTxt:this.state.pinErrTxt,loginLabel:this.state.logging?'Entrando…':'Entrar',
+      onPin:e=>this.setState({pin:e.target.value,pinErr:false}),onEmail:e=>this.setState({email:e.target.value,pinErr:false}),closePin:()=>this.setState({pinOpen:false,pin:''}),
+      submitPin:()=>{if(!this.fx||this.state.logging)return;this.setState({logging:true});
+        this.fx.U.signInWithEmailAndPassword(this.fx.auth,this.state.email.trim(),this.state.pin).then(c=>{
+          if(c.user.uid!==ADMIN_UID){this.fx.U.signOut(this.fx.auth);this.setState({logging:false,pinErr:true,pinErrTxt:'Este usuário não é admin.'});return;}
+          this.setState({logging:false,pinOpen:false,pin:'',sumula:true});
+        }).catch(()=>this.setState({logging:false,pinErr:true,pinErrTxt:'E-mail ou senha incorretos.'}));},
+      syncTxt:{online:'● Online',offline:'● Sem conexão',erro:'● Erro ao salvar',conectando:'● Conectando…'}[this.state.sync],
+      syncColor:this.state.sync==='online'?'#4ADE80':this.state.sync==='conectando'?'#BBB':'#F87171',
+      showFab:admin&&!this.state.sumula,fabBottom:mobile?'calc(76px + env(safe-area-inset-bottom))':'20px',
+      openSumula:()=>this.setState({sumula:true}),closeSumula:()=>this.setState({sumula:false}),
+      logout:()=>{if(this.fx)this.fx.U.signOut(this.fx.auth);this.setState({admin:false,sumula:false});},
+      sumulaOpen:admin&&this.state.sumula,
+      selId:sel,onSel:e=>this.setState({sel:e.target.value}),onPrev:()=>this.step(-1),onNext:()=>this.step(1),
+      matchOpts:all.map(m=>({id:m.id,label:(this.res(m.id).done?'✓ ':this.res(m.id).live?'● ':'')+m.label+' · '+tn(m.h,m.hl)+' × '+tn(m.a,m.al)})),
+      curLabel:cur.label,hName:tn(cur.h,cur.hl),aName:tn(cur.a,cur.al),
+      hScore:String(cr.h??0),aScore:String(cr.a??0),
+      statusLabel:cr.live?'Ao vivo':cr.done?'Encerrado':'Aguardando',stColorA:cr.live?RED:cr.done?'#F2C94C':'#555',
+      canPlay:!!(cur.h&&cur.a),cantPlay:!(cur.h&&cur.a),adminSides,
+      showPens:cur.ko&&(cr.live||cr.done)&&cr.h===cr.a,
+      sWaiting:!cr.live&&!cr.done,sLive:cr.live,sDone:cr.done,
+      onStart:()=>this.upd(sel,c=>({...c,live:true})),onFinish:()=>this.finish(sel),onReopen:()=>this.upd(sel,c=>({...c,live:true,done:false})),
+      canReset:cr.live||cr.done||cr.goals.length>0,onReset:()=>this.reset(sel),
+      hasGoals:cr.goals.length>0,
+      goalsList:cr.goals.map((g,i)=>{const code=g.s==='h'?cur.h:cur.a;return {n:g.n,team:tn(code,''),color:code?TEAMS[code].color:'transparent',onDel:()=>this.delGoal(sel,i)};}).reverse(),
+    };
+  }
+}
+</script>
+</body>
+</html>
