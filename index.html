@@ -51,7 +51,7 @@ input:focus{outline:2px solid #C8102E;outline-offset:1px}
       <span style="font-size:13px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.85)">Federação A.Mentz apresenta · 5ª edição</span>
       <h1 style="margin:0;font-family:'Barlow Condensed';font-weight:800;font-size:clamp(64px,15vw,168px);line-height:0.86;letter-spacing:-0.005em">SUPERCOCA<span style="display:block;color:#C8102E">2027</span></h1>
       <div style="width:56px;height:2px;background:#C9A227"></div>
-      <span style="font-size:clamp(16px,2vw,19px);font-weight:500">Ventura Xangrilá · Data a definir</span>
+      <span style="font-size:clamp(16px,2vw,19px);font-weight:500">Ventura Xangrilá · 13 e 14 de janeiro de 2027</span>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
         <button onClick="{{ goJogos }}" style="border:0;cursor:pointer;background:#C8102E;color:#fff;min-height:50px;padding:0 26px;border-radius:2px;font-family:'Barlow Condensed';font-weight:700;font-size:18px;letter-spacing:0.08em;text-transform:uppercase" style-hover="background:#8E0B20">Ver jogos</button>
         <button onClick="{{ goRegras }}" style="cursor:pointer;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.8);min-height:50px;padding:0 26px;border-radius:2px;font-family:'Barlow Condensed';font-weight:700;font-size:18px;letter-spacing:0.08em;text-transform:uppercase" style-hover="background:#fff;color:#111">Regulamento</button>
@@ -425,7 +425,7 @@ input:focus{outline:2px solid #C8102E;outline-offset:1px}
       <span style="font-family:'Barlow Condensed';font-weight:800;font-size:32px;letter-spacing:0.02em">SUPERCOCA <span style="color:#F2C94C">2027</span></span>
       <span onClick="{{ footerTap }}" style="font-size:14px;color:rgba(255,255,255,0.75);user-select:none;-webkit-user-select:none;cursor:default">5ª edição · Federação A.Mentz</span>
     </div>
-    <span style="font-size:14px;color:rgba(255,255,255,0.75)">Condomínio Ventura Xangrilá · Data a definir</span>
+    <span style="font-size:14px;color:rgba(255,255,255,0.75)">Condomínio Ventura Xangrilá · 13 e 14/01/2027</span>
   </div>
 </footer>
 
@@ -721,8 +721,8 @@ class Component extends DCLogic {
       poteScale:[0,1,2,3,4,5].map(i=>({n:String(i+1),bg:i===0?GOLD:i===5?'#0A0A0A':'rgba(200,16,46,'+(1-(i-1)*0.18)+')',fg:i===0?BLACK:WHITE})),
       posLegend:[['GOL','Goleiro'],['ZAG','Zagueiro'],['ALA','Ala'],['MEIA','Meia'],['ATA','Atacante']].map(([code,label])=>({code,label,...POS[code]})),
       teams:Object.values(TEAMS).map(t=>({name:t.name,color:t.color,players:t.p.map((n,i)=>({name:n,pote:i===6?'GOL':i+1,bg:potColor(i)[0],fg:potColor(i)[1]}))})),
-      days:[{label:'Dia 1',sub:'Rodadas 1 a 5',rounds:ROUNDS.filter(r=>r.day===1).map(gRound)},
-            {label:'Dia 2',sub:'Rodadas 6 e 7 + mata-mata',rounds:[...ROUNDS.filter(r=>r.day===2).map(gRound),...koRounds]}],
+      days:[{label:'Dia 1 · Qua 13/01',sub:'Rodadas 1 a 5',rounds:ROUNDS.filter(r=>r.day===1).map(gRound)},
+            {label:'Dia 2 · Qui 14/01',sub:'Rodadas 6 e 7 + mata-mata',rounds:[...ROUNDS.filter(r=>r.day===2).map(gRound),...koRounds]}],
       playedTxt:played+' de 21 jogos disputados',
       table:list.map((r,i)=>({...TEAMS[r.k],...r,pos:i+1,sgTxt:(r.sg>0?'+':'')+r.sg,
         posBg:i<2?RED:i<6?GOLD:'#E3E0DA',posFg:i<2?WHITE:i<6?BLACK:'#6B6862'})),
